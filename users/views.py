@@ -1,9 +1,12 @@
 from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 
+from users.forms import UserLoginForm
+
 
 class UserLogin(LoginView):
-    template_name = 'users/registration.html'
+    authentication_form = UserLoginForm
+    template_name = 'users/login.html'
     redirect_authenticated_user = True
 
     def get_context_data(self, **kwargs):

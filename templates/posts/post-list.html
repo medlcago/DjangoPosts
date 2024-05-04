@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load tz %}
+
+{% block styles %}
+    <style>
+        .btn {
+            border-radius: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-8 offset-md-2 ">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <span class="mr-2">Количество ваших постов:</span>
+                        <span class="badge badge-primary">{{ user.posts.count }}</span>
+                    </div>
+                    <a href="#" class="btn btn-primary" id="js-create-post">Создать новый пост</a>
+                </div>
+                {% for post in posts %}
+                    <div class="card mb-4 mt-3">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                {% if user.id == post.author.id %}
+                                    <i class="fas fa-check text-success" title="Вы являетесь автором"></i>
+                                {% endif %}
+                                {{ post.author.username }} ({{ post.created_at|timezone:"Europe/Moscow" }})</h6>
+                            <h5 class="card-title">{{ post.title }}</h5>
+                            <p class="card-text">
+                                {% if post.description|length > 200 %}
+                                    {{ post.description|safe|slice:":200" }}...
+                                    <a href="{{ post.get_absolute_url }}">Читать продолжение</a>
+                                {% else %}
+                                    {{ post.description|safe|linebreaks }}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

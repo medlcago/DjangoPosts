@@ -48,8 +48,8 @@ INSTALLED_APPS = [
 
 # apps
 INSTALLED_APPS += [
-    'posts.apps.PostConfig',
-    'users.apps.UsersConfig',
+    'users',
+    'posts',
     'bootstrap4',
     'fontawesome_5',
     'debug_toolbar'

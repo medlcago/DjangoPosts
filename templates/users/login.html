@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+    <style>
+        .card,
+        .login {
+            border-radius: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card mt-3">
+                    <div class="card-header">
+                        <h3 class="text-center">Login</h3>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action={% url "users:login" %}>
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        {% for error in field.errors %}
+                                            <div class="text-danger">
+                                                {{ error }}
+                                            </div>}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            <div class="form-group">
+                                <div class="row justify-content-end">
+                                    <div class="col">
+                                        <div class="form-group form-check d-flex align-items-center">
+                                            <input type="checkbox" class="form-check-input" id="remember-me"
+                                                   name="remember-me">
+                                            <label class="form-check-label mb-0" for="remember-me">Запомнить
+                                                меня</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% if form.non_field_errors %}
+                                <div class="alert alert-danger text-center">
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <button type="submit" class="btn btn-primary btn-block login">Войти</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

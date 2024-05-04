@@ -4,11 +4,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{{ title }}</title>
+    <title>Django Blog | {{ title }}</title>
     {% fontawesome_5_static %}
     {% bootstrap_css %}
     {% bootstrap_jquery %}
     {% bootstrap_javascript %}
+    {% block styles %}
+    {% endblock %}
 </head>
 <body>
 {% include 'header.html' %}
