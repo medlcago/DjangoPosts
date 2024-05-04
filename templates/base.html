@@ -1,0 +1,20 @@
+{% load bootstrap4 %}
+{% load fontawesome_5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    {% fontawesome_5_static %}
+    {% bootstrap_css %}
+    {% bootstrap_jquery %}
+    {% bootstrap_javascript %}
+</head>
+<body>
+{% include 'header.html' %}
+
+{% block content %}
+
+{% endblock %}
+</body>
+</html>
