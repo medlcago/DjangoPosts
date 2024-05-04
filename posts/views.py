@@ -5,7 +5,7 @@ from posts.models import Post
 
 
 class PostListView(LoginRequiredMixin, ListView):
-    queryset = Post.objects.select_related("author")
+    queryset = Post.published.select_related("author")
     context_object_name = "posts"
     template_name = "posts/post-list.html"
 
@@ -18,7 +18,7 @@ class PostListView(LoginRequiredMixin, ListView):
 
 
 class PostDetailView(LoginRequiredMixin, DetailView):
-    queryset = Post.objects.select_related("author")
+    queryset = Post.published.select_related("author")
     context_object_name = "post"
     template_name = "posts/post-detail.html"
 
