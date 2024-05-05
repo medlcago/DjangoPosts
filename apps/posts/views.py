@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView, DetailView
 
-from posts.models import Post
+from apps.posts.models import Post
 
 
 class PostListView(LoginRequiredMixin, ListView):
