@@ -12,7 +12,7 @@ class PostListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data["title"] = "Posts"
-        data["is_active"] = True
+        data["main_page"] = True
         data["user"] = self.request.user
         return data
 

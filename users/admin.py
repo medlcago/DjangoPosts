@@ -11,6 +11,7 @@ admin.site.unregister(User)
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     save_on_top = True
+    list_select_related = ("user", )
 
 
 @admin.register(User)

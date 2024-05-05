@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+    <style>
+        .profile-picture {
+            width: 294px;
+            height: 294px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .edit-profile {
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .profile-column {
+            margin-left: -100px;
+            margin-right: 100px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 mt-5 profile-column">
+                {% if user.profile.avatar %}
+                    <img src="{{ user.profile.avatar.url }}"
+                         class="img-fluid profile-picture mb-2 ml-3"
+                         alt="Фото профиля">
+                {% else %}
+                    <img src="{% static 'users/img/default-avatar.png' %}"
+                         class="img-fluid profile-picture mb-2 ml-3"
+                         alt="Фото профиля">
+                {% endif %}
+                {% if user.get_full_name %}
+                    <h2>{{ user.get_full_name }}</h2>
+                    <h6 class="text-muted">{{ user.username }}</h6>
+                {% else %}
+                    <h2>{{ user.username }}</h2>
+                {% endif %}
+                {% if user.profile.status %}
+                    <p class="user-status">{{ user.profile.status }}</p>
+                {% endif %}
+                <button class="btn btn-primary btn-block edit-profile">Edit profile</button>
+            </div>
+            <div class="col-md-8 mt-5">
+                {% if posts %}
+                    <h3>10 последних постов</h3>
+                    <div class="list-group">
+                        {% for post in posts %}
+                            <a href="{{ post.get_absolute_url }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ post.title }}</h5>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <h3>На данный момент вы не написали ни один пост &#9785;&#65039;</h3>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
