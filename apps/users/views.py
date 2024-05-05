@@ -3,7 +3,7 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView
 
-from users.forms import UserLoginForm
+from apps.users.forms import UserLoginForm
 
 
 class UserLogin(LoginView):

@@ -23,8 +23,8 @@ from . import settings
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path('admin/', admin.site.urls),
-    path("", include("posts.urls", namespace="posts")),
-    path("", include("users.urls", namespace="users")),
+    path("", include("apps.posts.urls", namespace="posts")),
+    path("", include("apps.users.urls", namespace="users")),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
