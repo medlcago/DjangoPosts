@@ -16,6 +16,13 @@
                         <a class="nav-link font-weight-bold" href="{% url 'posts:posts' %}">Главная</a>
                     {% endif %}
                 </li>
+            <li class="nav-item">
+                    {% if create_post_page %}
+                        <span class="nav-link font-weight-bold active">Создать пост</span>
+                    {% else %}
+                        <a class="nav-link font-weight-bold" href="{% url 'posts:create-post' %}">Создать пост</a>
+                    {% endif %}
+                </li>
                 <li class="nav-item">
                     {% if profile_page %}
                         <span class="nav-link font-weight-bold active">Профиль</span>

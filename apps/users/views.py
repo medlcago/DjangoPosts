@@ -14,9 +14,9 @@ class UserLogin(LoginView):
     redirect_authenticated_user = True
 
     def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        data["title"] = "Login"
-        return data
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Login"
+        return context
 
     def get_success_url(self):
         return reverse_lazy("posts:posts")

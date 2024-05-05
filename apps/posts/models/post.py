@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.urls import reverse_lazy
 
@@ -16,8 +17,8 @@ class Post(models.Model):
         PUBLISHED = (1, "Опубликовано")
 
     author = models.ForeignKey(User, on_delete=models.SET_NULL, related_name="posts", null=True, verbose_name="Автор")
-    title = models.CharField(max_length=255, blank=False, null=False, verbose_name="Заголовок")
-    description = models.TextField(blank=False, null=False, verbose_name="Содержание поста")
+    title = models.CharField(max_length=255, blank=False, null=False, verbose_name="Заголовок", validators=[MinLengthValidator(5), MaxLengthValidator(255)])
+    description = models.TextField(blank=False, null=False, verbose_name="Содержание поста", validators=[MinLengthValidator(128)])
     is_published: bool = models.BooleanField(choices=tuple(map(lambda x: (bool(x[0]), x[1]), Status.choices)),
                                              default=Status.DRAFT, verbose_name="Статус", blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
