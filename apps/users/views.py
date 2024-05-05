@@ -1,9 +1,11 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.http import JsonResponse
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import TemplateView
 
-from apps.users.forms import UserLoginForm
+from apps.users.forms import UserLoginForm, UpdateProfilePhotoForm
 
 
 class UserLogin(LoginView):
@@ -29,4 +31,27 @@ class UserProfile(LoginRequiredMixin, TemplateView):
         context["profile_page"] = True
         context["user"] = self.request.user
         context["posts"] = self.request.user.posts.all()[:10]
+        context["update_profile_photo_form"] = UpdateProfilePhotoForm(instance=self.request.user.profile)
         return context
+
+
+class ProfileUpdate(View):
+    def post(self, request, *args, **kwargs):
+        if request.FILES:
+            profile = request.user.profile
+            profile.avatar = request.FILES["file"]
+            form = UpdateProfilePhotoForm(request.POST, request.FILES, instance=profile)
+            if form.is_valid():
+                form.save()
+                return JsonResponse(data={
+                    "message": "Photo updated success"
+                },
+                    status=200,
+                    safe=False
+                )
+        return JsonResponse(data={
+            "message": "Bad request"
+        },
+            status=400,
+            safe=False
+        )

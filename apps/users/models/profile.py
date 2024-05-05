@@ -1,7 +1,10 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import FileExtensionValidator
 from django.db import models, transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+
+from DjangoBlog.settings import ALLOWED_IMAGE_EXTENSIONS
 
 User = get_user_model()
 
@@ -14,7 +17,7 @@ def get_avatar_upload_path(instance, filename):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", verbose_name="Профиль")
     avatar = models.ImageField(upload_to=get_avatar_upload_path, default=None, blank=True, null=True,
-                               verbose_name="Аватарка")
+                               verbose_name="Аватарка", validators=[FileExtensionValidator(allowed_extensions=ALLOWED_IMAGE_EXTENSIONS)])
     status = models.CharField(max_length=128, default=None, blank=True, null=True, verbose_name="Статус")
 
     class Meta:
