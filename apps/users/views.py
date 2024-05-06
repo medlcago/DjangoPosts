@@ -63,7 +63,7 @@ class UpdateProfileStatusView(View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         status = data.get("status", None)
-        if status:
+        if status is not None:
             profile = request.user.profile
             profile.status = status
             profile.save()
