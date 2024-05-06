@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
@@ -8,7 +10,7 @@ from django.views.generic import TemplateView
 from apps.users.forms import UserLoginForm, UpdateProfilePhotoForm
 
 
-class UserLogin(LoginView):
+class UserLoginView(LoginView):
     authentication_form = UserLoginForm
     template_name = 'users/login.html'
     redirect_authenticated_user = True
@@ -22,7 +24,7 @@ class UserLogin(LoginView):
         return reverse_lazy("posts:posts")
 
 
-class UserProfile(LoginRequiredMixin, TemplateView):
+class UserProfileView(LoginRequiredMixin, TemplateView):
     template_name = "users/profile.html"
 
     def get_context_data(self, **kwargs):
@@ -35,7 +37,7 @@ class UserProfile(LoginRequiredMixin, TemplateView):
         return context
 
 
-class ProfileUpdate(View):
+class UpdateProfilePhotoView(View):
     def post(self, request, *args, **kwargs):
         if request.FILES:
             profile = request.user.profile
@@ -54,4 +56,24 @@ class ProfileUpdate(View):
         },
             status=400,
             safe=False
+        )
+
+
+class UpdateProfileStatusView(View):
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        status = data.get("status", None)
+        if status:
+            profile = request.user.profile
+            profile.status = status
+            profile.save()
+            return JsonResponse(data={
+                "message": "Status updated success"
+            },
+                status=200
+            )
+        return JsonResponse(data={
+            "message": "Bad request"
+        },
+            status=400
         )

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load tz %}
 
 {% block styles %}
     <style>
@@ -19,6 +20,17 @@
         .profile-column {
             margin-left: -100px;
             margin-right: 100px;
+        }
+
+        #user-status-js {
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        #status-input-js {
+            resize: none;
+            overflow: hidden;
+            border-radius: 10px;
         }
     </style>
 {% endblock %}
@@ -42,10 +54,15 @@
                 {% else %}
                     <h2 id="user-username">{{ user.username }}</h2>
                 {% endif %}
-                {% if user.profile.status %}
-                    <p id="user-status">{{ user.profile.status }}</p>
-                {% endif %}
-                <button class="btn btn-primary btn-block edit-profile">Edit profile</button>
+                <p class="user-status" id="user-status-js">{{ user.profile.status|default_if_none:'' }}</p>
+                <div id="status-input-container-js" style="display: none;">
+                    <textarea class="form-control mb-3" id="status-input-js"
+                              rows="1">{{ user.profile.status|default_if_none:'' }}</textarea>
+                    <button class="btn btn-primary btn-sm" type="button" id="save-status-button-js">Сохранить</button>
+                    <button class="btn btn-secondary btn-sm" type="button" id="cancel-save-status-button-js">Отменить
+                    </button>
+                </div>
+                <button class="btn btn-primary btn-block edit-profile" id="edit-profile-js">Edit profile</button>
             </div>
             <div class="col-md-8 mt-5">
                 {% if posts %}
@@ -56,6 +73,7 @@
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1" id="post-id-{{ post.id }}">{{ post.title }}</h5>
                                 </div>
+                                <span class="text-muted">{{ post.created_at|timezone:"Europe/Moscow" }}</span>
                             </a>
                         {% endfor %}
                     </div>
@@ -69,4 +87,6 @@
     <!-- Модальное окно загрузки фото -->
     {% include 'modals/upload-photo.html' %}
     <script src="{% static 'users/js/upload-photo.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+    <script src="{% static 'users/js/update-status.js' %}"></script>
 {% endblock %}
