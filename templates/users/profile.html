@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load post_tags %}
 {% load static %}
 {% load tz %}
 
@@ -71,7 +72,9 @@
                         {% for post in posts %}
                             <a href="{{ post.get_absolute_url }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1" id="post-id-{{ post.id }}">{{ post.title }}</h5>
+                                    <h5 class="mb-1" id="post-id-{{ post.id }}">
+                                        {% publish_status post %}
+                                        {{ post.title }}</h5>
                                 </div>
                                 <span class="text-muted">{{ post.created_at|timezone:"Europe/Moscow" }}</span>
                             </a>

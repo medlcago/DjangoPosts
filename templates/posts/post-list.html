@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load post_tags %}
 {% load tz %}
 
 {% block styles %}
@@ -21,24 +22,26 @@
                     <a class="btn btn-primary" id="js-create-post" href={% url 'posts:create-post' %}>Создать новый пост</a>
                 </div>
                 {% for post in posts %}
-                    <div class="card mb-4 mt-3">
-                        <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                {% if user.id == post.author.id %}
-                                    <i class="fas fa-check text-success" title="Вы являетесь автором"></i>
-                                {% endif %}
-                                {{ post.author.username }} ({{ post.created_at|timezone:"Europe/Moscow" }})</h6>
-                            <h5 class="card-title"><a href="{{ post.get_absolute_url }}" class="text-dark">{{ post.title }}</a></h5>
-                            <p class="card-text">
-                                {% if post.description|length > 200 %}
-                                    {{ post.description|safe|slice:":200" }}...
-                                    <a href="{{ post.get_absolute_url }}">Читать продолжение</a>
-                                {% else %}
-                                    {{ post.description|safe|linebreaks }}
-                                {% endif %}
-                            </p>
+                    {% if not post.is_published and user.id == post.author.id or post.is_published %}
+                        <div class="card mb-4 mt-3">
+                            <div class="card-body">
+                                <h6 class="card-subtitle mb-2 text-muted">
+                                    {% if user.id == post.author.id %}
+                                        {% publish_status post %}
+                                    {% endif %}
+                                    {{ post.author.username }} ({{ post.created_at|timezone:"Europe/Moscow" }})</h6>
+                                <h5 class="card-title"><a href="{{ post.get_absolute_url }}" class="text-dark">{{ post.title }}</a></h5>
+                                <p class="card-text">
+                                    {% if post.description|length > 200 %}
+                                        {{ post.description|safe|slice:":200" }}...
+                                        <a href="{{ post.get_absolute_url }}">Читать продолжение</a>
+                                    {% else %}
+                                        {{ post.description|safe|linebreaks }}
+                                    {% endif %}
+                                </p>
+                            </div>
                         </div>
-                    </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
