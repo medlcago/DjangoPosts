@@ -1,4 +1,5 @@
 $(".save-photo").click(function () {
+    $("#no-photo").remove();
     let input = $("#formFile")[0];
 
     if (input.files && input.files[0]) {
@@ -23,7 +24,7 @@ $(".save-photo").click(function () {
             location.reload();
         }, 2000);
     } else {
-        let errorMessage = $('<small class="text-danger">Пожалуйста, выберите фото</small>');
+        let errorMessage = $('<small class="text-danger" id="no-photo">Пожалуйста, выберите фото</small>');
         $(".upload-photo").after(errorMessage);
     }
 });
