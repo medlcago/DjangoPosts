@@ -33,10 +33,10 @@
                                 <h5 class="card-title"><a href="{{ post.get_absolute_url }}" class="text-dark">{{ post.title }}</a></h5>
                                 <p class="card-text">
                                     {% if post.description|length > 200 %}
-                                        {{ post.description|safe|slice:":200" }}...
+                                        {{ post.description|sanitize_user_input|slice:":200" }}...
                                         <a href="{{ post.get_absolute_url }}">Читать продолжение</a>
                                     {% else %}
-                                        {{ post.description|safe|linebreaks }}
+                                        {{ post.description|sanitize_user_input|linebreaks }}
                                     {% endif %}
                                 </p>
                             </div>
