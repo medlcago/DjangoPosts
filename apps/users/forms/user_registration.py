@@ -27,10 +27,15 @@ class UserRegistrationForm(UserCreationForm):
             "required": _("Поле является обязательным")
         })
 
+        self.fields["username"].widget.attrs.update({
+            "minlength": 6,
+            "maxlength": 16
+        })
+
         self.fields["password1"].widget.attrs.update(
             {
                 "class": "form-control form-widget",
-                "placeholder":  _("Пароль")
+                "placeholder": _("Пароль")
             }
         )
         self.fields["password2"].widget.attrs.update(
@@ -39,6 +44,16 @@ class UserRegistrationForm(UserCreationForm):
                 "placeholder": _("Подтвердите пароль")
             }
         )
+
+    def clean_username(self):
+        username = super().clean_username()
+        if len(username) < 6:
+            raise forms.ValidationError(_("Минимальная длина 6 символов"))
+        if len(username) > 16:
+            raise forms.ValidationError(_("Максимальная длина 16 символов"))
+        if any(char.isalpha() and not char.isascii() for char in username):
+            raise forms.ValidationError(_("Используйте только латинские символы и цифры"))
+        return username
 
     class Meta(UserCreationForm.Meta):
         model = User
