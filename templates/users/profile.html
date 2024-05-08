@@ -57,7 +57,7 @@
                 {% endif %}
                 <p class="user-status" id="user-status-js">{{ user.profile.status|default_if_none:'' }}</p>
                 <div id="status-input-container-js" style="display: none;">
-                    <textarea class="form-control mb-3" id="status-input-js"
+                    <textarea placeholder="О себе" class="form-control mb-3" id="status-input-js"
                               rows="1">{{ user.profile.status|default_if_none:'' }}</textarea>
                     <button class="btn btn-primary btn-sm" type="button" id="save-status-button-js">Сохранить</button>
                     <button class="btn btn-secondary btn-sm" type="button" id="cancel-save-status-button-js">Отменить
