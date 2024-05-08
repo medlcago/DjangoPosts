@@ -1,13 +1,35 @@
 import json
 
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import JsonResponse
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
 
-from apps.users.forms import UserLoginForm, UpdateProfilePhotoForm
+from apps.users.forms import (
+    UserLoginForm,
+    UpdateProfilePhotoForm,
+    UserRegistrationForm
+)
+
+
+class UserRegistrationView(CreateView):
+    form_class = UserRegistrationForm
+    template_name = "users/registration.html"
+    success_url = reverse_lazy("users:profile")
+
+    def form_valid(self, form):
+        user = form.save(commit=True)
+        login(self.request, user)
+        return redirect(self.success_url)
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect(self.success_url)
+        return super().get(request, *args, **kwargs)
 
 
 class UserLoginView(LoginView):
@@ -37,7 +59,7 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class UpdateProfilePhotoView(View):
+class UpdateProfilePhotoView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         if request.FILES:
             profile = request.user.profile
@@ -59,7 +81,7 @@ class UpdateProfilePhotoView(View):
         )
 
 
-class UpdateProfileStatusView(View):
+class UpdateProfileStatusView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         data = json.loads(request.body)
         status = data.get("status", None)
