@@ -16,7 +16,7 @@
                         <a class="nav-link font-weight-bold" href="{% url 'posts:posts' %}">Главная</a>
                     {% endif %}
                 </li>
-            <li class="nav-item">
+                <li class="nav-item">
                     {% if create_post_page %}
                         <span class="nav-link font-weight-bold active">Создать пост</span>
                     {% else %}
@@ -34,8 +34,7 @@
             <ul class="navbar-nav ml-auto">
                 {% if not user.is_authenticated %}
                     <span class="font-weight-bold text-white">Пожалуйста, <a href={% url "users:login" %}>войдите</a> в аккаунт</span>
-                {% endif %}
-                {% if user.is_authenticated %}
+                {% else %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

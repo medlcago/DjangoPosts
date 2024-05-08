@@ -15,7 +15,7 @@ def get_avatar_upload_path(instance, filename):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", verbose_name="Профиль")
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile", verbose_name="Пользователь")
     avatar = models.ImageField(upload_to=get_avatar_upload_path, default=None, blank=True, null=True,
                                verbose_name="Аватарка", validators=[FileExtensionValidator(allowed_extensions=ALLOWED_IMAGE_EXTENSIONS)])
     status = models.CharField(max_length=128, default=None, blank=True, null=True, verbose_name="Статус")
@@ -26,7 +26,7 @@ class Profile(models.Model):
         ordering = ("pk",)
 
     def __str__(self):
-        return f"Профиль {self.user}"
+        return str(self.user)
 
     def save(self, *args, **kwargs):
         if self.pk:

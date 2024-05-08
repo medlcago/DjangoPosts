@@ -21,6 +21,11 @@ class UserRegistrationView(CreateView):
     template_name = "users/registration.html"
     success_url = reverse_lazy("users:profile")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["title"] = "Registration"
+        return context
+
     def form_valid(self, form):
         user = form.save(commit=True)
         login(self.request, user)
@@ -92,10 +97,12 @@ class UpdateProfileStatusView(LoginRequiredMixin, View):
             return JsonResponse(data={
                 "message": "Status updated success"
             },
-                status=200
+                status=200,
+                safe=False
             )
         return JsonResponse(data={
             "message": "Bad request"
         },
-            status=400
+            status=400,
+            safe=False
         )
