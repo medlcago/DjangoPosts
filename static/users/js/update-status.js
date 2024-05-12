@@ -10,15 +10,6 @@ $("#edit-profile-js").click(function (e) {
     autosize($("#status-input-js"));
 });
 
-$("#save-status-button-js").click(function () {
-    let newStatus = $("#status-input-js").val();
-    $("#user-status-js").text(newStatus);
-    $("#user-status-js").show();
-    $("#edit-profile-js").show();
-    $("#status-input-container-js").hide();
-    autosize.destroy($("#status-input-js"));
-});
-
 $("#cancel-save-status-button-js").click(function (e) {
     $("#status-input-js").val(originalStatus);
     $("#user-status-js").show();
@@ -29,9 +20,15 @@ $("#cancel-save-status-button-js").click(function (e) {
 
 $("#save-status-button-js").click(function (event) {
     event.preventDefault();
-    let status = $("#status-input-js").val();
+    let newStatus = $("#status-input-js").val();
+    $("#user-status-js").text(newStatus);
+    $("#user-status-js").show();
+    $("#edit-profile-js").show();
+    $("#status-input-container-js").hide();
+    autosize.destroy($("#status-input-js"));
+
     let data = {
-        "status": status
+        "status": newStatus
     }
     console.log(data);
 
