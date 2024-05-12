@@ -42,6 +42,13 @@ class UserLoginView(LoginView):
     template_name = 'users/login.html'
     redirect_authenticated_user = True
 
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        remember_me = self.request.POST.get("remember-me", None)
+        if remember_me is None:
+            self.request.session.set_expiry(0)
+        return response
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["title"] = "Login"

@@ -148,3 +148,5 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "apps.users.backends.EmailBackend"
 ]
+
+SESSION_COOKIE_AGE = 2_592_000
