@@ -9,7 +9,7 @@ register = template.Library()
 def publish_status(post):
     if post.is_published:
         return format_html('<i class="fas fa-check text-success" title="Вы являетесь автором"></i>')
-    return format_html('<i class="fas fa-times text-danger" title="Черновик"></i>')
+    return format_html('<i class="fas fa-lock text-danger" title="Черновик"></i>')
 
 
 @register.filter

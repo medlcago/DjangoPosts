@@ -3,6 +3,15 @@
 {% load post_tags %}
 {% load static %}
 
+{% block styles %}
+    <style>
+        #delete-post {
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
     <div class="container mt-3">
         <div class="row">
@@ -14,6 +23,8 @@
                             ({{ post.created_at|timezone:"Europe/Moscow" }})
                             {% if user.id == post.author.id %}
                                 - <span class="text-info">Этот пост ваш</span>
+                                <i class="fas fa-times text-danger float-right" id="delete-post"
+                                   data-post-id="{{ post.pk }}" title="Удалить"></i>
                             {% endif %}
                         </h6>
 
@@ -31,17 +42,30 @@
                         </div>
 
                         <div id="edit-post-container-js" style="display: none">
-                            <textarea class="form-control" style="border-radius: 10px;" rows="3"
-                                      id="edit-post-title-js">{{ post.title }}</textarea>
-                            <textarea class="form-control mt-3" style="border-radius: 10px;" rows="5"
-                                      id="edit-post-description-js">{{ post.description }}</textarea>
+                            <div class="form-group">
+                                <textarea class="form-control" style="border-radius: 10px;" rows="3"
+                                          id="edit-post-title-js">{{ post.title }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control mt-3" style="border-radius: 10px;" rows="5"
+                                          id="edit-post-description-js">{{ post.description }}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <select name="is_published" class="form-control" style="border-radius: 10px;"
+                                        id="edit-post-status-js">
+                                    <option {% if post.is_published %}selected{% endif %} value="True">Опубликовано
+                                    </option>
+                                    <option {% if not post.is_published %}selected{% endif %} value="False">Черновик
+                                    </option>
+                                </select>
+                            </div>
                             <div class="mt-2">
-                                <button class="btn btn-primary btn-sm" id="post-save-js">Сохранить</button>'
+                                <button class="btn btn-primary btn-sm" id="post-save-js">Сохранить</button>
                                 <button class="btn btn-secondary btn-sm" id="post-cancel-js">Отмена</button>
                                 <a href="{% url 'posts:posts' %}" class="float-right">На главную</a>
                             </div>
                         </div>
-                     <div class="text-danger" id="error-messages-js"></div>
+                        <div class="text-danger" id="error-messages-js"></div>
                     </div>
                 </div>
             </div>
@@ -49,4 +73,5 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
     <script src="{% static 'posts/js/edit-post.js' %}"></script>
+    <script src="{% static 'posts/js/delete-post.js' %}"></script>
 {% endblock %}

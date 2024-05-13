@@ -69,8 +69,9 @@ class UpdatePostView(LoginRequiredMixin, View):
         pk = data.get("postId")
         title = data.get("postTitle")
         description = data.get("postDescription")
+        status = data.get("postStatus")
 
-        if not all([pk, title, description]):
+        if not all([pk, title, description, status]):
             return JsonResponse(data={
                 "message": "Bad request"
             },
@@ -88,6 +89,7 @@ class UpdatePostView(LoginRequiredMixin, View):
 
         post.title = title
         post.description = description
+        post.is_published = status
 
         try:
             post.full_clean()

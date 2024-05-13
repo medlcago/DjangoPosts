@@ -45,12 +45,13 @@ $("#post-save-js").click(function () {
     let postId = $(".card-body").attr("data-post-id");
     let newPostTitle = $("#edit-post-title-js").val();
     let newPostDescription = $("#edit-post-description-js").val();
-
+    let newPostStatus = $("#edit-post-status-js").val();
 
     let data = {
         "postId": postId,
         "postTitle": newPostTitle,
-        "postDescription": newPostDescription
+        "postDescription": newPostDescription,
+        "postStatus": newPostStatus
     }
 
     $.ajax({
