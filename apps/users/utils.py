@@ -2,7 +2,7 @@ from PIL import Image
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
 
-from DjangoBlog.settings import ALLOWED_IMAGE_EXTENSIONS
+from DjangoPosts.settings import ALLOWED_IMAGE_EXTENSIONS
 
 
 def get_avatar_upload_path(instance, filename):
