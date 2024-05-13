@@ -1,6 +1,10 @@
+import json
+
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
-from django.shortcuts import redirect
+from django.core.exceptions import ValidationError
+from django.http import Http404, JsonResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
 
 from apps.posts.forms import CreatePostForm
@@ -57,3 +61,49 @@ class CreatePostView(LoginRequiredMixin, CreateView):
         post.author = self.request.user
         post.save()
         return redirect(post.get_absolute_url())
+
+
+class UpdatePostView(LoginRequiredMixin, View):
+    def post(self, request):
+        data = json.loads(self.request.body)
+        pk = data.get("postId")
+        title = data.get("postTitle")
+        description = data.get("postDescription")
+
+        if not all([pk, title, description]):
+            return JsonResponse(data={
+                "message": "Bad request"
+            },
+                status=400
+            )
+
+        post = get_object_or_404(Post, pk=pk)
+
+        if self.request.user.id != post.author.id:
+            return JsonResponse(data={
+                "message": "Access denied"
+            },
+                status=403
+            )
+
+        post.title = title
+        post.description = description
+
+        try:
+            post.full_clean()
+        except ValidationError as ex:
+            error_dict = ex.message_dict
+            errors = {field: messages for field, messages in error_dict.items()}
+            return JsonResponse(data={
+                "message": "Bad request",
+                "errors": errors
+            },
+                status=400
+            )
+
+        post.save()
+        return JsonResponse(data={
+            "message": "Post successfully updated"
+        },
+            status=200
+        )

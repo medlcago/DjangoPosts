@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 {% load tz %}
 {% load post_tags %}
+{% load static %}
 
 {% block content %}
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card mb-4">
-                    <div class="card-body">
+                    <div class="card-body" data-post-id="{{ post.pk }}">
                         <h6 class="card-subtitle mb-2 text-muted">
                             {{ post.author.username }}
                             ({{ post.created_at|timezone:"Europe/Moscow" }})
@@ -15,15 +16,37 @@
                                 - <span class="text-info">Этот пост ваш</span>
                             {% endif %}
                         </h6>
-                        <h5 class="card-title">{{ post.title }}</h5>
-                        <p class="card-text">{{ post.description|sanitize_user_input|linebreaks }}</p>
-                        {% if user.id == post.author.id %}
-                            <a href="#" class="text-success">Редактировать</a>
-                        {% endif %}
-                        <a href="{% url 'posts:posts' %}" class="float-right">На главную</a>
+
+                        <div id="post-container-js">
+                            <h5 class="card-title" id="post-title-js">{{ post.title }}</h5>
+                            <div class="card-text"
+                                 id="post-description-js">{{ post.description|sanitize_user_input|linebreaks }}
+                            </div>
+                            <div class="mt-2">
+                                {% if user.id == post.author.id %}
+                                    <a href="#" class="text-success" id="post-edit-js">Редактировать</a>
+                                {% endif %}
+                                <a href="{% url 'posts:posts' %}" class="float-right">На главную</a>
+                            </div>
+                        </div>
+
+                        <div id="edit-post-container-js" style="display: none">
+                            <textarea class="form-control" style="border-radius: 10px;" rows="3"
+                                      id="edit-post-title-js">{{ post.title }}</textarea>
+                            <textarea class="form-control mt-3" style="border-radius: 10px;" rows="5"
+                                      id="edit-post-description-js">{{ post.description }}</textarea>
+                            <div class="mt-2">
+                                <button class="btn btn-primary btn-sm" id="post-save-js">Сохранить</button>'
+                                <button class="btn btn-secondary btn-sm" id="post-cancel-js">Отмена</button>
+                                <a href="{% url 'posts:posts' %}" class="float-right">На главную</a>
+                            </div>
+                        </div>
+                     <div class="text-danger" id="error-messages-js"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/autosize@4.0.2/dist/autosize.min.js"></script>
+    <script src="{% static 'posts/js/edit-post.js' %}"></script>
 {% endblock %}
