@@ -19,6 +19,9 @@
                 <div class="card mb-4">
                     <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">
+                            {% if user.id == post.author.id %}
+                                {% publish_status post %}
+                            {% endif %}
                             {{ post.author.username }}
                             ({{ post.created_at|timezone:"Europe/Moscow" }})
                             {% if user.id == post.author.id %}

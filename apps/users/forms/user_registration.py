@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
@@ -51,7 +53,7 @@ class UserRegistrationForm(UserCreationForm):
             raise forms.ValidationError(_("Минимальная длина 6 символов"))
         if len(username) > 16:
             raise forms.ValidationError(_("Максимальная длина 16 символов"))
-        if any(char.isalpha() and not char.isascii() for char in username):
+        if not re.fullmatch(r"^[A-Za-z][A-Za-z_.\\d]*[A-Za-z\\d]$", username):
             raise forms.ValidationError(_("Используйте только латинские символы и цифры"))
         return username
 

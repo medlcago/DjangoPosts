@@ -28,7 +28,7 @@ class UserRegistrationView(CreateView):
 
     def form_valid(self, form):
         user = form.save(commit=True)
-        login(self.request, user)
+        login(self.request, user, backend="django.contrib.auth.backends.ModelBackend")
         return redirect(self.success_url)
 
     def get(self, request, *args, **kwargs):

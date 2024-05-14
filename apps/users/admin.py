@@ -12,6 +12,7 @@ admin.site.unregister(User)
 class ProfileInline(admin.StackedInline):
     model = Profile
     show_change_link = True
+    can_delete = False
 
 
 @admin.register(Session)
