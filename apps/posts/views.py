@@ -1,18 +1,18 @@
 import json
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
-from django.http import Http404, JsonResponse
-from django.shortcuts import redirect, get_object_or_404
+from django.http import Http404
+from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import ListView, DetailView, CreateView
 
 from apps.posts.forms import CreatePostForm
 from apps.posts.models import Post
+from apps.posts.services import post_service
 
 
 class PostListView(LoginRequiredMixin, ListView):
-    queryset = Post.objects.select_related("author").order_by("id")
+    queryset = Post.objects.select_related("author").order_by("-created_at")
     context_object_name = "posts"
     template_name = "posts/post-list.html"
 
@@ -66,48 +66,9 @@ class CreatePostView(LoginRequiredMixin, CreateView):
 class UpdatePostView(LoginRequiredMixin, View):
     def post(self, request):
         data = json.loads(self.request.body)
-        pk = data.get("postId")
-        title = data.get("postTitle")
-        description = data.get("postDescription")
-        status = data.get("postStatus")
-
-        if not all([pk, title, description, status]):
-            return JsonResponse(data={
-                "message": "Bad request"
-            },
-                status=400
-            )
-
-        post = get_object_or_404(Post, pk=pk)
-
-        if self.request.user.id != post.author.id:
-            return JsonResponse(data={
-                "message": "Access denied"
-            },
-                status=403
-            )
-
-        post.title = title
-        post.description = description
-        post.is_published = status
-
-        try:
-            post.full_clean()
-        except ValidationError as ex:
-            error_dict = ex.message_dict
-            errors = {field: messages for field, messages in error_dict.items()}
-            return JsonResponse(data={
-                "message": "Bad request",
-                "errors": errors
-            },
-                status=400
-            )
-
-        post.save()
-        return JsonResponse(data={
-            "message": "Post successfully updated"
-        },
-            status=200
+        return post_service.update_post(
+            user_id=request.user.id,
+            **data
         )
 
 
@@ -115,25 +76,7 @@ class DeletePostView(LoginRequiredMixin, View):
     def delete(self, request):
         data = json.loads(self.request.body)
         pk = data.get("postId")
-        if pk is None:
-            return JsonResponse(data={
-                "message": "Bad request"
-            },
-                status=400
-            )
-
-        post = get_object_or_404(Post, pk=pk)
-
-        if self.request.user.id != post.author.id:
-            return JsonResponse(data={
-                "message": "Access denied"
-            },
-                status=403
-            )
-
-        post.delete()
-        return JsonResponse(data={
-            "message": "Post successfully deleted"
-        },
-            status=200
+        return post_service.delete_post(
+            user_id=request.user.id,
+            pk=pk
         )

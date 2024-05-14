@@ -34,7 +34,7 @@ $("#save-status-button-js").click(function (event) {
 
     $.ajax({
         url: "/update-profile-status/",
-        type: "POST",
+        type: "PATCH",
         data: JSON.stringify(data),
         processData: false,
         contentType: false,

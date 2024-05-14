@@ -3,7 +3,6 @@ import json
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
-from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -14,6 +13,7 @@ from apps.users.forms import (
     UpdateProfilePhotoForm,
     UserRegistrationForm
 )
+from apps.users.services import user_service
 
 
 class UserRegistrationView(CreateView):
@@ -73,43 +73,18 @@ class UserProfileView(LoginRequiredMixin, TemplateView):
 
 class UpdateProfilePhotoView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        if request.FILES:
-            profile = request.user.profile
-            profile.avatar = request.FILES["file"]
-            form = UpdateProfilePhotoForm(request.POST, request.FILES, instance=profile)
-            if form.is_valid():
-                form.save()
-                return JsonResponse(data={
-                    "message": "Photo updated success"
-                },
-                    status=200,
-                    safe=False
-                )
-        return JsonResponse(data={
-            "message": "Bad request"
-        },
-            status=400,
-            safe=False
+        return user_service.update_photo(
+            profile=self.request.user.profile,
+            files=self.request.FILES,
+            request=request
         )
 
 
 class UpdateProfileStatusView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
-        status = data.get("status", None)
-        if status is not None:
-            profile = request.user.profile
-            profile.status = status
-            profile.save()
-            return JsonResponse(data={
-                "message": "Status updated success"
-            },
-                status=200,
-                safe=False
-            )
-        return JsonResponse(data={
-            "message": "Bad request"
-        },
-            status=400,
-            safe=False
+    def patch(self, request, *args, **kwargs):
+        data = json.loads(self.request.body)
+        status = data.get("status")
+        return user_service.update_status(
+            profile=request.user.profile,
+            status=status
         )
