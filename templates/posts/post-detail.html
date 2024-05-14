@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-md-8 offset-md-2">
                 <div class="card mb-4">
-                    <div class="card-body" data-post-id="{{ post.pk }}">
+                    <div class="card-body">
                         <h6 class="card-subtitle mb-2 text-muted">
                             {{ post.author.username }}
                             ({{ post.created_at|timezone:"Europe/Moscow" }})
@@ -60,7 +60,7 @@
                                 </select>
                             </div>
                             <div class="mt-2">
-                                <button class="btn btn-primary btn-sm" id="post-save-js">Сохранить</button>
+                                <button class="btn btn-primary btn-sm" id="post-save-js" data-post-id="{{ post.pk }}">Сохранить</button>
                                 <button class="btn btn-secondary btn-sm" id="post-cancel-js">Отмена</button>
                                 <a href="{% url 'posts:posts' %}" class="float-right">На главную</a>
                             </div>

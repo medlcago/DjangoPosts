@@ -42,7 +42,7 @@ $("#post-save-js").click(function () {
     $("#edit-post-container-js").hide();
     $("#post-container-js").show();
 
-    let postId = $(".card-body").attr("data-post-id");
+    let postId = $(this).attr("data-post-id");
     let newPostTitle = $("#edit-post-title-js").val();
     let newPostDescription = $("#edit-post-description-js").val();
     let newPostStatus = $("#edit-post-status-js").val();
