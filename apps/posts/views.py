@@ -109,3 +109,31 @@ class UpdatePostView(LoginRequiredMixin, View):
         },
             status=200
         )
+
+
+class DeletePostView(LoginRequiredMixin, View):
+    def delete(self, request):
+        data = json.loads(self.request.body)
+        pk = data.get("postId")
+        if pk is None:
+            return JsonResponse(data={
+                "message": "Bad request"
+            },
+                status=400
+            )
+
+        post = get_object_or_404(Post, pk=pk)
+
+        if self.request.user.id != post.author.id:
+            return JsonResponse(data={
+                "message": "Access denied"
+            },
+                status=403
+            )
+
+        post.delete()
+        return JsonResponse(data={
+            "message": "Post successfully deleted"
+        },
+            status=200
+        )
