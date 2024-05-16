@@ -56,6 +56,8 @@
                     <h2 id="user-username">{{ user.username }}</h2>
                 {% endif %}
                 <p class="user-status" id="user-status-js">{{ user.profile.status|default_if_none:'' }}</p>
+                <div class="text-danger" id="error-messages-js"></div>
+
                 <div id="status-input-container-js" style="display: none;">
                     <textarea placeholder="О себе" class="form-control mb-3" id="status-input-js"
                               rows="1">{{ user.profile.status|default_if_none:'' }}</textarea>

@@ -3,7 +3,7 @@ from django.db import models, transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from apps.users.utils import (
+from apps.utils import (
     get_avatar_upload_path,
     validate_image
 )

@@ -137,6 +137,8 @@ STATICFILES_DIRS = [
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+AVATARS_BASE_PATH = "avatars/{username}/{filename}"
+
 ALLOWED_IMAGE_EXTENSIONS = ("jpg", "jpeg", "png")
 
 # Default primary key field type

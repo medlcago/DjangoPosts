@@ -1,19 +1,13 @@
-from django.core.exceptions import ValidationError
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from pydantic import ValidationError as pdValidationError
 
 from apps.posts.models import Post
 from apps.posts.schemes import PostUpdateRequest
+from apps.utils import set_attrs
 
 
 class PostService:
-    def set_attrs(self, post: Post, data: dict, validate: bool = True) -> dict | None:
-        for key, value in data.items():
-            setattr(post, key, value)
-        if validate:
-            return self.full_clean(post)
-
     @staticmethod
     def check_post_author(user_id: int, author_id: int) -> bool:
         return user_id == author_id
@@ -21,15 +15,6 @@ class PostService:
     @staticmethod
     def get_post(pk: int) -> Post:
         return get_object_or_404(Post, pk=pk)
-
-    @staticmethod
-    def full_clean(post: Post) -> dict | None:
-        try:
-            post.full_clean()
-        except ValidationError as ex:
-            error_dict = ex.message_dict
-            errors = {field: messages for field, messages in error_dict.items()}
-            return errors
 
     def create_post(self):
         pass
@@ -55,7 +40,7 @@ class PostService:
                 status=403
             )
 
-        if errors := self.set_attrs(post, request_data.model_dump(exclude={"pk"})):
+        if errors := set_attrs(post, request_data.model_dump(exclude={"pk"})):
             return JsonResponse(data={
                 "message": "Bad request",
                 "errors": errors

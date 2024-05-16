@@ -2,6 +2,7 @@ from django.http import HttpRequest, JsonResponse, QueryDict
 
 from apps.users.forms import UpdateProfilePhotoForm
 from apps.users.models import Profile
+from apps.utils import set_attrs
 
 
 class UserService:
@@ -35,7 +36,13 @@ class UserService:
                 status=400
             )
 
-        profile.status = status
+        if errors := set_attrs(profile, {"status": status}):
+            return JsonResponse(data={
+                "message": "Bad request",
+                "errors": errors
+            },
+                status=400
+            )
         profile.save()
         return JsonResponse(data={
             "message": "Status successfully updated"
