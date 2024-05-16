@@ -15,6 +15,7 @@ class PostListView(LoginRequiredMixin, ListView):
     queryset = Post.objects.select_related("author").order_by("-created_at")
     context_object_name = "posts"
     template_name = "posts/post-list.html"
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
